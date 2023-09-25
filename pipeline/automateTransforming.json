@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
+				"name": "DataTransformation",
 				"type": "DatabricksNotebook",
 				"dependsOn": [],
 				"policy": {
@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Repos/sbentaleb.ext@simplonformations.onmicrosoft.com/AzurePublicTransportDataIntegration/ETL/integration"
+					"notebookPath": "/Repos/sbentaleb.ext@simplonformations.onmicrosoft.com/AzurePublicTransportDataIntegration/ETL/transformation"
 				},
 				"linkedServiceName": {
 					"referenceName": "bentalebDataBricksLink",
