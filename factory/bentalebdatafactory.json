@@ -1,0 +1,9 @@
+{
+	"name": "bentalebdatafactory",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7bfafa43-2260-41cf-b75b-2b89c22fcf85",
+		"tenantId": "a2e466aa-4f86-4545-b5b8-97da7c8febf3"
+	}
+}
