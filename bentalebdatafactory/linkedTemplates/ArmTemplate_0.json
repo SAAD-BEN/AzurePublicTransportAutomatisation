@@ -82,7 +82,10 @@
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "transformationInfo",
-							"value": "@activity('DataTransformation').output.runOutput"
+							"value": {
+								"value": "@activity('DataTransformation').output.runOutput",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -122,8 +125,8 @@
 					"recurrence": {
 						"frequency": "Minute",
 						"interval": 1,
-						"startTime": "2023-09-27T13:07:00",
-						"endTime": "2023-09-27T13:40:00",
+						"startTime": "2023-09-27T13:27:00",
+						"endTime": "2023-09-27T14:10:00",
 						"timeZone": "Morocco Standard Time"
 					}
 				}
