@@ -1,0 +1,136 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "bentalebdatafactory"
+		},
+		"bentalebDataBricksLink_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'bentalebDataBricksLink'"
+		},
+		"bentalebDataBricksLink_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0927-073616-deozl5ap"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/bentalebDataBricksLink')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7197147741827979.19.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('bentalebDataBricksLink_accessToken')]"
+					},
+					"existingClusterId": "[parameters('bentalebDataBricksLink_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/automateTransforming')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DataTransformation",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Repos/sbentaleb.ext@simplonformations.onmicrosoft.com/AzurePublicTransportDataIntegration/ETL/integration"
+						},
+						"linkedServiceName": {
+							"referenceName": "bentalebDataBricksLink",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Run log",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "DataTransformation",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "transformationInfo",
+							"value": "@activity('DataTransformation').output.runOutput"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"transformationInfo": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/bentalebDataBricksLink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AutomatisationTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "automateTransforming",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2023-09-27T13:07:00",
+						"endTime": "2023-09-27T13:40:00",
+						"timeZone": "Morocco Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/automateTransforming')]"
+			]
+		}
+	]
+}
