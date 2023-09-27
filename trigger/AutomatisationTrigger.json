@@ -1,5 +1,5 @@
 {
-	"name": "batchProcTrigger",
+	"name": "AutomatisationTrigger",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -15,9 +15,9 @@
 		"typeProperties": {
 			"recurrence": {
 				"frequency": "Minute",
-				"interval": 3,
-				"startTime": "2023-09-25T15:21:00",
-				"endTime": "2023-09-25T16:28:00",
+				"interval": 1,
+				"startTime": "2023-09-27T13:07:00",
+				"endTime": "2023-09-27T13:40:00",
 				"timeZone": "Morocco Standard Time"
 			}
 		}

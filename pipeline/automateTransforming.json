@@ -15,14 +15,40 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Repos/sbentaleb.ext@simplonformations.onmicrosoft.com/AzurePublicTransportDataIntegration/ETL/transformation"
+					"notebookPath": "/Repos/sbentaleb.ext@simplonformations.onmicrosoft.com/AzurePublicTransportDataIntegration/ETL/integration"
 				},
 				"linkedServiceName": {
 					"referenceName": "bentalebDataBricksLink",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Run log",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "DataTransformation",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "transformationInfo",
+					"value": "@activity('DataTransformation').output.runOutput"
+				}
 			}
 		],
+		"variables": {
+			"transformationInfo": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
